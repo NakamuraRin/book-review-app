@@ -17,7 +17,8 @@
 }
 
 .errormessage-email,
-.errormessage-password {
+.errormessage-password,
+.errormessage-login {
   color: red;
 }
 

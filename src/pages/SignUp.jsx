@@ -1,15 +1,58 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Compressor from "compressorjs";
-import "./signup.css"
+import { logIn } from "../authSlice";
 import { Header } from "../components/Header";
+import { url } from "../const";
+import "./signup.css";
 
 export const SignUp = () => {
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth.isSignIn);
+  const dispatch = useDispatch();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessageUserName, setErrorMessageUserName] = useState("");
+  const [errorMessageName, setErrorMessageName] = useState("");
   const [errorMessageEmail, setErrorMessageEmail] = useState("");
   const [errorMessagePassword, setErrorMessagePassword] = useState("");
+  const [errorMessageSignUp, setErrorMessageSignUp] = useState("");
+  const [, setCookie] = useCookies();
+
+  const onSignUp = () => {
+    const data = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    axios
+      .post(`${url}/users`, data)
+      .then((res) => {
+        const token = res.data.token;
+        dispatch(logIn());
+        setCookie("token", token);
+        navigate("/");
+      })
+      .catch((err) => {
+        setErrorMessageSignUp(`サインアップに失敗しました。 ${err}`);
+      });
+
+    if (auth) return <Navigate to="/" />;
+  };
+
+  const handleNameChange = (e) => setName(e.target.value);
+
+  const handleNameBlur = (e) => {
+    if (name === "") {
+      setErrorMessageName("ユーザー名を入力してください");
+    } else {
+      setErrorMessageName("");
+    }
+  };
 
   const handleEmailChange = (e) => {
     const email = e.target.value.trim();
@@ -79,16 +122,19 @@ export const SignUp = () => {
     <div>
       <Header />
       <h2>ユーザー新規作成</h2>
+      <p className="errormessage-signup">{errorMessageSignUp}</p>
       <main className="signup-form">
-        <label htmlFor="username">ユーザー名</label>
+        <label htmlFor="name">ユーザー名</label>
         <br />
         <input
-          id="username"
+          id="name"
           type="text"
-          className="username-input"
+          className="name-input"
+          onChange={handleNameChange}
+          onBlur={handleNameBlur}
         />
         <br />
-        <p className="errormessage-username">{errorMessageUserName}</p>
+        <p className="errormessage-name">{errorMessageName}</p>
         <label htmlFor="email">メールアドレス</label>
         <br />
         <input
@@ -130,6 +176,7 @@ export const SignUp = () => {
           type="submit"
           className="signup-submit"
           value="新規作成"
+          onClick={onSignUp}
         />
         <br />
         <Link to="/login" className="login-button">ログインはこちら</Link>

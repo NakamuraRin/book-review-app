@@ -21,7 +21,8 @@
 
 .errormessage-email,
 .errormessage-password,
-.errormessage-username {
+.errormessage-username,
+.errormessage-signup {
   color: red;
 }
 

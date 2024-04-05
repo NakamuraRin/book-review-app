@@ -1,17 +1,23 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import "./Login.css";
+import { useCookies } from "react-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
+import { logIn } from "../authSlice";
+import { url } from "../const";
+import "./Login.css";
 
 export const Login = () => {
+  const navigate = useNavigate();
+  const auth = useSelector((state) => state.auth.isSignIn);
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessageEmail, setErrorMessageEmail] = useState("");
   const [errorMessagePassword, setErrorMessagePassword] = useState("");
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-  }
+  const [errorMessageLogin, setErrorMessageLogin] = useState("");
+  const [, setCookie] = useCookies();
 
   const handleEmailChange = (e) => {
     const email = e.target.value.trim();
@@ -52,11 +58,26 @@ export const Login = () => {
     }
   };
 
+  const onLogin = () => {
+    axios
+      .post(`${url}/signin`, { email: email, password: password })
+      .then((res) => {
+        setCookie("token", res.data.token);
+        dispatch(logIn());
+        navigate("/");
+      })
+      .catch((err) => {
+        setErrorMessageLogin(`ログインに失敗しました。${err}`);
+      });
+  };
+
+  if (auth) return <Navigate to="/" />;
 
   return (
     <div>
       <Header />
       <h2>ログイン画面</h2>
+      <p className="errormessage-login">{errorMessageLogin}</p>
       <main className="login-form">
         <label htmlFor="email">メールアドレス</label>
         <br />
@@ -82,6 +103,7 @@ export const Login = () => {
           type="submit"
           className="login-submit"
           value="ログイン"
+          onClick={onLogin}
         />
         <br />
         <Link to="/signup" className="signup-button">新規登録はこちら</Link>
