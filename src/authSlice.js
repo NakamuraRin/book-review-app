@@ -4,7 +4,7 @@ import { Cookies } from "react-cookie";
 const cookie = new Cookies();
 
 const initialState = {
-  isLogin: cookie.get("token") !== undefined,
+  isLogIn: cookie.get("token") !== undefined,
 };
 
 export const authSlice = createSlice({
