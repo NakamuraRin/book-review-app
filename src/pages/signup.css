@@ -1,0 +1,30 @@
+.email-input,
+.password-input,
+.username-input {
+  font-size: large;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.usericon-input {
+  height: 20px;
+  margin: 10px auto 20px auto;
+}
+
+#usericon-figure {
+  display: none;
+}
+
+#usericon-preview {
+  width: 30%;
+}
+
+.errormessage-email,
+.errormessage-password,
+.errormessage-username {
+  color: red;
+}
+
+.signup-submit {
+  margin-bottom: 20px;
+}

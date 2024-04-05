@@ -1,0 +1,30 @@
+.login-form {
+  width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.email-input {
+  font-size: large;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.password-input {
+  font-size: large;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.errormessage-email,
+.errormessage-password {
+  color: red;
+}
+
+.login-submit {
+  margin-bottom: 20px;
+}
+
+.signup-button {
+  color: blue;
+}
