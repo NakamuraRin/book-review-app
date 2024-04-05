@@ -35,13 +35,13 @@ export const SignUp = () => {
         const token = res.data.token;
         dispatch(logIn());
         setCookie("token", token);
-        navigate("/");
+        navigate("/login");
       })
       .catch((err) => {
         setErrorMessageSignUp(`サインアップに失敗しました。 ${err}`);
       });
 
-    if (auth) return <Navigate to="/login" />;
+    if (auth) return <Navigate to="/" />;
   };
 
   const handleNameChange = (e) => setName(e.target.value);
